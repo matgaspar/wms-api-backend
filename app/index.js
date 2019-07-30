@@ -11,13 +11,23 @@ const multer = require('multer');
 
 const app = express();
 const server = require('http').Server(app);
-const config = require('./config');
+const CONFIG = require('./config');
+const db = require('./models');
+
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Conectado ao banco de dados SQL:', CONFIG.DB.name);
+  })
+  .catch(() => {
+    console.error('Não é possível conectar-se ao banco de dados SQL:', CONFIG.DB.name);
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-const upload = multer(config.Upload);
+const upload = multer(CONFIG.Upload);
 
 app.get('/', (req, res) => res.send('<b>Hello World!</b>'));
 app.get('/devices', (req, res) => res.status(200).json(getDevices()));
@@ -97,6 +107,8 @@ app.post('/canhoto', upload.array('docs'), (req, res) => {
   }
 });
 
+app.use('/public', require('./routes/public.routes'));
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
@@ -120,6 +132,6 @@ process.on('unhandledRejection', (error) => {
   console.error('Uncaught Error', pe(error));
 });
 
-server.listen(3030, () => {
-  console.log('Servidor em execução na porta :3030');
+server.listen(CONFIG.port, () => {
+  console.log(`Servidor em execução na porta :${CONFIG.port}`);
 });
