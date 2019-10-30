@@ -19,7 +19,7 @@
     "pdf-image": "^2.0.0",
     "pdfkit": "^0.10.0",
     "quagga": "^0.12.1",
-    "sequelize": "^5.11.0",
+    "sequelize": "^5.15.1",
     "sequelize-paginate": "^1.1.6",
     "usb-barcode-scanner": "^1.0.2"
   },
